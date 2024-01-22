@@ -1,6 +1,10 @@
 using AzureServiceBus.Model;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddUserSecrets<Program>();
 
 // Bind Azure Service Bus settings
 var azureServiceBusConfig = new ServiceBusConfig();
@@ -11,6 +15,12 @@ builder.Services.AddSingleton(azureServiceBusConfig);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddLogging(logging =>
+{
+    logging.AddApplicationInsights();
+    logging.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Information);
+});
 
 var app = builder.Build();
 

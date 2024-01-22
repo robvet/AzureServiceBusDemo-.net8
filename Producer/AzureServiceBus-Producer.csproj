@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	<PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.22.0" />
   </ItemGroup>
 
 </Project>
