@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace ServiceBusSqlAdapter.Models;
 
-namespace ServiceBusSqlAdapter.Models;
-
-public partial class InsuranceTransactionLog
+public partial class TransactionLog
 {
     public int Id { get; set; }
 

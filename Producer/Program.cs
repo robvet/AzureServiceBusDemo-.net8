@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddLogging(logging =>
 {
-    logging.AddApplicationInsights();
+    logging.AddApplicationInsights(builder.Configuration["ApplicationInsights:InstrumentationKey"]);
     logging.AddFilter<ApplicationInsightsLoggerProvider>("", LogLevel.Information);
 });
 

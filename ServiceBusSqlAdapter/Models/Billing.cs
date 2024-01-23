@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ServiceBusSqlAdapter.Models;
+﻿namespace ServiceBusSqlAdapter.Models;
 
 public partial class Billing
 {

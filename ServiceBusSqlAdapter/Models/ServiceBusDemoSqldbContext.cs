@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace ServiceBusSqlAdapter.Models;
 
@@ -19,7 +17,7 @@ public partial class ServiceBusDemoSqldbContext : DbContext
 
     public virtual DbSet<Claim> Claims { get; set; }
 
-    public virtual DbSet<InsuranceTransactionLog> InsuranceTransactionLogs { get; set; }
+    public virtual DbSet<TransactionLog> TransactionLogs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
@@ -63,7 +61,7 @@ public partial class ServiceBusDemoSqldbContext : DbContext
                 .HasColumnName("insured");
         });
 
-        modelBuilder.Entity<InsuranceTransactionLog>(entity =>
+        modelBuilder.Entity<TransactionLog>(entity =>
         {
             entity.HasKey(e => e.Id);
 

@@ -7,13 +7,13 @@ using System.Text.Json;
 
 namespace ServiceBusSqlAdapter
 {
-    public class ClaimsProcessing
+    public class BillingProcessing
     {
-        private readonly ILogger<ClaimsProcessing> _logger;
+        private readonly ILogger<BillingProcessing> _logger;
         private readonly IConfiguration _configuration;
         private readonly ServiceBusDemoSqldbContext _dbContext;
 
-        public ClaimsProcessing(ILogger<ClaimsProcessing> logger, 
+        public BillingProcessing(ILogger<BillingProcessing> logger, 
                                 IConfiguration configuration,
                                 ServiceBusDemoSqldbContext dbContext)
         {
@@ -22,8 +22,8 @@ namespace ServiceBusSqlAdapter
             _dbContext = dbContext;
         }
 
-        [Function(nameof(ClaimsProcessing))]
-        public void Run([ServiceBusTrigger("%TopicName%", "%ClaimSubscriptionName%", Connection = "ServiceBusConnection")] ServiceBusReceivedMessage message)
+        [Function(nameof(BillingProcessing))]
+        public void Run([ServiceBusTrigger("%TopicName%", "%BillingSubscriptionName%", Connection = "ServiceBusConnection")] ServiceBusReceivedMessage message)
         {
             //var mySecret = _configuration["MySecret"];
 
@@ -31,7 +31,6 @@ namespace ServiceBusSqlAdapter
             //var messageId = message.MessageId;
             var body = message.Body.ToString();
             var messageMetaDataType = message.Subject;
-            //var contentType = message.ContentType;
 
             try
             {
@@ -39,15 +38,15 @@ namespace ServiceBusSqlAdapter
                 var transactionMessage = JsonSerializer.Deserialize<TransactionMessage>(body, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 // Insert the message data into the SQL database using Entity Framework
-                var entity = new Claim
+                var entity = new Billing
                 {
-                    ClaimNumber = transactionMessage.ReferenceIdentifier ?? throw new NullReferenceException("Transaction Type required"),
+                    BillingNumber = transactionMessage.ReferenceIdentifier ?? throw new NullReferenceException("Transaction Type required"),
                     Insured = transactionMessage.InsuredName ?? throw new NullReferenceException("Insured required"),
                 };
-                _dbContext.Claims.Add(entity);
+                _dbContext.Billings.Add(entity);
                 _dbContext.SaveChanges();
 
-                _logger.LogInformation($"Message {transactionMessage.ReferenceIdentifier} sent to Azure Service Bus");
+                _logger.LogInformation($"Billing Message {transactionMessage.ReferenceIdentifier} sent to Azure Service Bus");
             }
             catch (Exception ex)
             {
@@ -62,6 +61,6 @@ namespace ServiceBusSqlAdapter
 
             // Message is automatically settled to Azure Service Bus.
             // No need to call CompleteAsync()
-            }
         }
     }
+}
